@@ -1,0 +1,74 @@
+# GENERADO por `venth compile` desde pilot-talent-screening.yaml — NO editar a mano.
+# Fuente de verdad = el AssuranceProgram (capa Art.9). Las measures post-market
+# (lifecycle monitoring/production) se omiten del assessment-plan ex-ante.
+---
+component-definition:
+  uuid: f09f908e-ffe4-503b-b3bb-032e1648cc97
+  metadata:
+    title: Assessment plan (compilado de AssuranceProgram 'pilot-talent-screening')
+    version: 1.0.0
+    oscal-version: 1.2.2
+  components:
+  - uuid: b9e3ef41-98ba-5070-ba98-3a0dd3fd5c0e
+    type: software
+    title: pilot-talent-screening (assurance)
+    description: Controles ex-ante compilados desde el AssuranceProgram (Art.9 → contrato del gate).
+    control-implementations:
+    - uuid: 82ed1089-b543-583d-be04-978454f600a6
+      source: '#vl-ai-assurance-profile-2026'
+      description: 'Generado por `venth compile`. NO editar a mano: la fuente es el AssuranceProgram.'
+      implemented-requirements:
+      - uuid: dcfad0ca-87be-5904-bff2-feaa2bdfe49d
+        control-id: data-sample-adequacy
+        description: Datos de cantidad insuficiente para certificar la equidad de selección (Art.10(5)) — sample_adequacy_ratio
+        props:
+        - name: metric_key
+          value: sample_adequacy_ratio
+        - name: operator
+          value: gte
+        - name: threshold
+          value: '1.0'
+        - name: severity
+          value: high
+        - name: enforcement_mode
+          value: block
+        - name: evaluation_method
+          value: automated
+        - name: lifecycle_phase
+          value: training
+        - name: risk_id
+          value: risk.inadequate-data
+        - name: control_tier
+          value: protective
+        - name: article
+          value: '10'
+        - name: standard_clauses
+          value: eu/pren-18228@2026#8.1,iso/23894@2023#6.4.2
+      - uuid: 7857e788-06a7-59bb-8aba-cd9190c3c324
+        control-id: model-feature-leakage
+        description: Fuga de la etiqueta en una variable colineal del cribador — leaky_feature_flag
+        props:
+        - name: metric_key
+          value: leaky_feature_flag
+        - name: operator
+          value: lt
+        - name: threshold
+          value: '1'
+        - name: severity
+          value: high
+        - name: enforcement_mode
+          value: block
+        - name: evaluation_method
+          value: automated
+        - name: lifecycle_phase
+          value: validation
+        - name: risk_id
+          value: risk.feature-leakage
+        - name: control_tier
+          value: protective
+        - name: article
+          value: '10'
+        - name: frameworks
+          value: eu/ai-act@2024#art-15
+        - name: standard_clauses
+          value: eu/pren-18228@2026#6.2.1,eu/pren-18228@2026#6.3,eu/pren-18228@2026#8.1,iso/23894@2023#6.4.3,iso/23894@2023#6.4.4
