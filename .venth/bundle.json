@@ -35,7 +35,7 @@
     "organization": "Example Talent Corp"
   },
   "triple": {
-    "code": "2bf704489348bdb53e1de639c1a64611f131ea03",
+    "code": "5f92b89d3b3882db1a2bf1a406f160c034158e54",
     "model": "gradient-boosting:seed=42",
     "dataset": ""
   },
@@ -113,12 +113,12 @@
     {
       "control_id": "model-feature-leakage",
       "metric_key": "leaky_feature_flag",
-      "actual_value": 1.0,
+      "actual_value": 0.0,
       "threshold": 1.0,
       "operator": "lt",
       "severity": "high",
       "enforcement_mode": "block",
-      "passed": false,
+      "passed": true,
       "eval_passed": null,
       "lifecycle_phase": "validation",
       "risk_id": "risk.feature-leakage",
@@ -128,7 +128,17 @@
       ]
     }
   ],
-  "treatment_events": [],
+  "treatment_events": [
+    {
+      "control_id": "model-feature-leakage",
+      "risk_id": "risk.feature-leakage",
+      "kind": "Treatment",
+      "previous_value": 1.0,
+      "current_value": 0.0,
+      "anchored_commit": "5f92b89d3b3882db1a2bf1a406f160c034158e54",
+      "previous_commit": "2bf704489348bdb53e1de639c1a64611f131ea03"
+    }
+  ],
   "risk_analysis": [
     {
       "risk_id": "risk.inadequate-data",
@@ -157,7 +167,7 @@
       "cycle": {
         "status": "open"
       },
-      "priority": 2
+      "priority": 1
     },
     {
       "risk_id": "risk.feature-leakage",
@@ -188,11 +198,11 @@
       "inherent_overall": "HIGH",
       "residual_overall": "MEDIUM",
       "requires_treatment": true,
-      "control_confirmed": false,
+      "control_confirmed": true,
       "cycle": {
-        "status": "open"
+        "status": "closed"
       },
-      "priority": 1
+      "priority": 5
     },
     {
       "risk_id": "risk.insufficient-human-oversight",
@@ -221,7 +231,7 @@
       "cycle": {
         "status": "monitored"
       },
-      "priority": 4
+      "priority": 3
     },
     {
       "risk_id": "risk.insufficient-transparency-information",
@@ -256,7 +266,7 @@
       "cycle": {
         "status": "monitored"
       },
-      "priority": 5
+      "priority": 4
     },
     {
       "risk_id": "risk.algorithmic-info-works-council",
@@ -291,7 +301,7 @@
       "cycle": {
         "status": "monitored"
       },
-      "priority": 3
+      "priority": 2
     }
   ],
   "overall_residual": {
@@ -303,7 +313,7 @@
       "risk.insufficient-human-oversight"
     ]
   },
-  "pipeline_lock_digest": "sha256:2421652f700912b58457e305c1dfc4bffb0412e6156075d8b768526ff7f3dc0d",
+  "pipeline_lock_digest": "sha256:3ba136c08f60d0b8f0e728b6f071baa71830bbebbe7ddcce806ea6efecc4b136",
   "sections": {
     "classification": "Valid",
     "data_governance": "Valid",
@@ -352,7 +362,7 @@
       "highest_authority": "international",
       "presumption": false,
       "control_count": 2,
-      "passed_count": 0
+      "passed_count": 1
     },
     {
       "article": "11",
@@ -499,7 +509,7 @@
   ],
   "bom": {
     "format_version": "cyclonedx-1.6",
-    "digest": "sha256:9c8ea5ac118156ab2766052d16081dbcb1a127b7ce37d7cc0b811ed1f8b02acc",
+    "digest": "sha256:5de8f565c3bcaf5b2cc78f601c1eec1f46b0b36d27c965150b6f80f4df92d2a3",
     "components": [
       {
         "name": "PyYAML",

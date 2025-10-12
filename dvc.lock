@@ -29,18 +29,18 @@ stages:
       size: 4376
     params:
       params.yaml:
-        mitigate: false
+        mitigate: true
         seed: 42
     outs:
     - path: .venturalitica/bom.json
       hash: md5
-      md5: dabfdbfedea631579786b57104bfa55c
+      md5: 2c1272f7846a3dff853c51e28c9d1ab8
       size: 56398
     - path: metrics.json
       hash: md5
-      md5: fd846e9a168d201d0db5c1c3f992b392
+      md5: 9427b0cab593ff78a592b471069c4985
       size: 161
     - path: model.pkl
       hash: md5
-      md5: c656699382891af7c53e55906c73f835
-      size: 58625
+      md5: 63c0508cea9a53e0f140c2c4b643b05c
+      size: 87121
