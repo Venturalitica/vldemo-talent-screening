@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "conformance",
+  "system": "pilot-talent-screening",
+  "payload": {
+    "clauses": [
+      {
+        "basis": "partes interesadas identificadas",
+        "clause_id": "6.2",
+        "cycle_phase": "communication",
+        "decision": "covered",
+        "measures": [],
+        "title": "Communication and consultation"
+      },
+      {
+        "basis": "criterios establecidos y aplicados (residual agregado evaluado)",
+        "clause_id": "6.3",
+        "cycle_phase": "criteria",
+        "decision": "covered",
+        "measures": [],
+        "title": "Scope, context and criteria"
+      },
+      {
+        "basis": "0 de 1 measure(s) citantes evaluadas pasan",
+        "clause_id": "6.4.2",
+        "cycle_phase": "identification",
+        "decision": "gap",
+        "measures": [
+          "data-sample-adequacy"
+        ],
+        "title": "Risk identification"
+      },
+      {
+        "basis": "1 de 1 measure(s) citantes evaluadas pasan",
+        "clause_id": "6.4.3",
+        "cycle_phase": "analysis",
+        "decision": "covered",
+        "measures": [
+          "model-feature-leakage"
+        ],
+        "title": "Risk analysis"
+      },
+      {
+        "basis": "1 de 1 measure(s) citantes evaluadas pasan",
+        "clause_id": "6.4.4",
+        "cycle_phase": "evaluation",
+        "decision": "covered",
+        "measures": [
+          "model-feature-leakage"
+        ],
+        "title": "Risk evaluation"
+      },
+      {
+        "basis": "sin measure que la cite ni criterio/artefacto",
+        "clause_id": "6.5",
+        "cycle_phase": "treatment",
+        "decision": "gap",
+        "measures": [],
+        "title": "Risk treatment"
+      },
+      {
+        "basis": "1 measure(s) citan la cláusula, aún sin evaluar (declarada, no medida)",
+        "clause_id": "6.6",
+        "cycle_phase": "monitor",
+        "decision": "covered_attested",
+        "measures": [
+          "works-council-information-pack"
+        ],
+        "title": "Monitoring and review"
+      },
+      {
+        "basis": "evidencia signed_bundle presente",
+        "clause_id": "6.7",
+        "cycle_phase": "file",
+        "decision": "covered",
+        "measures": [],
+        "title": "Recording and reporting"
+      }
+    ],
+    "standard": "iso/23894@2023"
+  }
+}
