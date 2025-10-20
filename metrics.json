@@ -2,5 +2,5 @@
   "data-gender-representation": 0.35348837209302325,
   "data-class-balance": 0.6883720930232559,
   "data-sample-adequacy": 0.43,
-  "model-feature-leakage": 1
+  "model-feature-leakage": 0
 }
