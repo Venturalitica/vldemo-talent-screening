@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "kind": "reconstruct",
+  "system": "pilot-talent-screening",
+  "payload": {
+    "system_name": "pilot-talent-screening",
+    "snapshots": [
+      {
+        "sha": "6cc8077086927c852cc968b47c925bd5ba129814",
+        "date": "2025-10-20T19:38:31+00:00",
+        "subject": "run: V1 evidencia (gate puede ser RED; seed=42)"
+      },
+      {
+        "sha": "1e33f7e2093ddf2714ef5960b987920f45475527",
+        "date": "2025-10-20T19:38:31+00:00",
+        "subject": "run: V2 evidencia (gate puede ser RED; seed=42)"
+      }
+    ],
+    "risks": [
+      {
+        "risk_id": "risk.feature-leakage",
+        "identified_sha": "531a21c46f87597926e9993e1a5d4437c43c5af1",
+        "identified_date": "2025-10-20T19:38:31Z",
+        "provenance": "declared",
+        "assessment": {
+          "risk_id": "risk.feature-leakage",
+          "kind": "threat",
+          "provenance": "declared",
+          "likelihood": "LIKELY",
+          "residual_declared_likelihood": "UNLIKELY",
+          "dimensions": [
+            {
+              "dimension": "individual",
+              "impact": "HIGH",
+              "appetite": "MEDIUM",
+              "inherent_level": "HIGH",
+              "inherent_eval": "exceeds",
+              "residual_level": "MEDIUM",
+              "residual_eval": "within"
+            },
+            {
+              "dimension": "organization",
+              "impact": "HIGH",
+              "appetite": "HIGH",
+              "inherent_level": "HIGH",
+              "inherent_eval": "within",
+              "residual_level": "MEDIUM",
+              "residual_eval": "within"
+            }
+          ],
+          "inherent_overall": "HIGH",
+          "residual_overall": "MEDIUM",
+          "requires_treatment": true,
+          "control_confirmed": true,
+          "cycle": {
+            "status": "closed"
+          },
+          "priority": 5
+        }
+      },
+      {
+        "risk_id": "risk.inadequate-data",
+        "identified_sha": "531a21c46f87597926e9993e1a5d4437c43c5af1",
+        "identified_date": "2025-10-20T19:38:31Z",
+        "provenance": "declared",
+        "assessment": {
+          "risk_id": "risk.inadequate-data",
+          "kind": "threat",
+          "provenance": "declared",
+          "likelihood": "LIKELY",
+          "dimensions": [
+            {
+              "dimension": "individual",
+              "impact": "HIGH",
+              "appetite": "MEDIUM",
+              "inherent_level": "HIGH",
+              "inherent_eval": "exceeds"
+            },
+            {
+              "dimension": "society",
+              "impact": "HIGH",
+              "appetite": "MEDIUM",
+              "inherent_level": "HIGH",
+              "inherent_eval": "exceeds"
+            }
+          ],
+          "inherent_overall": "HIGH",
+          "requires_treatment": true,
+          "control_confirmed": false,
+          "cycle": {
+            "status": "open"
+          },
+          "priority": 1
+        }
+      }
+    ],
+    "approval": null,
+    "lifecycle": {
+      "state": "draft"
+    }
+  }
+}
