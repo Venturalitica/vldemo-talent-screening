@@ -1,0 +1,46 @@
+schema: '2.0'
+stages:
+  evaluate:
+    cmd: .venv/bin/python evaluate.py
+    deps:
+    - path: compliance_eval.py
+      hash: md5
+      md5: 958f5aff04bafa2600b93d4d10650cb6
+      size: 14047
+    - path: data/Placement_Data_Full_Class.csv
+      hash: md5
+      md5: aa6bbdce7124bc8d5e1327b588bfaf8d
+      size: 19712
+    - path: data/campus.croissant.json
+      hash: md5
+      md5: 5812c433cc67b95cb9faa723bbcfd000
+      size: 8232
+    - path: evaluate.py
+      hash: md5
+      md5: 017564b375f450a67cb2062ef918ec20
+      size: 458
+    - path: shared_data/policies/assessment_plan.oscal.yaml
+      hash: md5
+      md5: 1fdb511ba1beaa352f514ff4f911cded
+      size: 2804
+    - path: train.py
+      hash: md5
+      md5: 04b1e8c4241208c2a157f54cff82f755
+      size: 4376
+    params:
+      params.yaml:
+        mitigate: false
+        seed: 42
+    outs:
+    - path: .venturalitica/bom.json
+      hash: md5
+      md5: 780940b427a619fd35d1e0e94834a0ef
+      size: 113306
+    - path: metrics.json
+      hash: md5
+      md5: fd846e9a168d201d0db5c1c3f992b392
+      size: 161
+    - path: model.pkl
+      hash: md5
+      md5: c656699382891af7c53e55906c73f835
+      size: 58625
