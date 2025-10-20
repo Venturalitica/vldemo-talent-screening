@@ -1,0 +1,274 @@
+apiVersion: venturalitica.ai/v1alpha1
+kind: AISystem
+
+# ── Plantilla de gobernanza FICCIONALIZADA del repo demo público `vldemo-talent-screening`.
+# Deriva de crates/venth-cli/tests/resources/talentscreen/venth.yaml. Pipeline REAL: la stage DVC
+# `evaluate` carga el dataset CC0 Campus Recruitment (n=215) vía Croissant, entrena un cribador
+# (GradientBoosting), mide con el SDK venturalitica (vl.monitor/enforce) y emite metrics.json +
+# un ML-BOM CycloneDX. OPSEC: la organización es ficticia ("Example Talent Corp"), sin
+# universidad/empresa concreta y sin codenames; el dataset es CC0 (bundleado en data/).
+#
+# ── ESCENARIO DEL CICLO ABIERTO (doble historia honesta) ─────────────────────────────────────
+# Dos controles MEDIDOS `enforcement: gate`:
+#   (a) model-feature-leakage  — CIERRA: V1 (mitigate=false) incluye la feature fugada `salary`
+#       (NaN ⇔ Not Placed ⇒ imputa 0 ⇒ fuga total, leakage=1, ROJO) → V2 (mitigate=true) la
+#       retira (leakage=0, VERDE). El sub-tratamiento versionado en git que SÍ cierra el bucle
+#       ISO 23894 (cambio de código).
+#   (b) data-sample-adequacy  — NO CIERRA: n/500 = 215/500 = 0.43 < 1.0 → ROJO PERMANENTE a HEAD.
+#       Ningún cambio de código lo cierra: el único remedio es ADQUIRIR más datos (data_gap).
+#       Forzarlo sería fraude → se deja honestamente abierto.
+# Resultado a HEAD: hay un gate bloqueante abierto → VEREDICTO OBJETIVO = gap (gate ROJO) →
+# NO approved (estado tested/treated). Es CORRECTO Y DESEADO: la historia honesta del ciclo
+# abierto. El bundle SÍ firma y verifica (firma VÁLIDA); lo que sale rojo es el veredicto de
+# conformidad, no la integridad criptográfica.
+
+# ── 1. Identidad y finalidad del sistema ─────────────────────────────────────
+system:
+  name: pilot-talent-screening
+  intended_purpose: "Cribado automatizado de candidaturas en selección de personal: clasifica candidaturas para priorizar la revisión del reclutador. Sistema de ALTO RIESGO (EU AI Act Anexo III §4 — empleo). Despliegue en España; sujeto al Estatuto de los Trabajadores (Art.64.4.d) y a la Ley 15/2022 además del AI Act y el RGPD."
+  organization: Example Talent Corp
+  version: "1.0.0"
+  decisions: [shortlist_candidate, reject_candidate]
+  affected_persons: [candidatos, reclutadores]
+  component_type: ai-model
+  # Mal uso razonablemente previsible (ISO 42001 6.1.4 / EU AI Act Art.9(2)(b)).
+  potential_misuses:
+    - id: mu.decision-automatica-sin-revisar
+      description: "Usar la predicción del cribador como decisión definitiva sin que un reclutador la revise ni pueda anularla (RGPD Art.22: decisión individual automatizada)."
+      addressed_by: [risk.insufficient-human-oversight]
+    - id: mu.subgrupos-sin-verificar
+      description: "Desplegar el cribador asumiendo equidad por sexo sin verificarla, cuando la muestra no permite certificar equidad con fiabilidad estadística."
+      addressed_by: [risk.inadequate-data]
+    - id: mu.proxy-discrimination
+      description: "Introducir variables proxy de atributos protegidos o variables con fuga de la etiqueta que el modelo aprende como atajo en lugar de mérito real."
+      addressed_by: [risk.feature-leakage]
+    - id: mu.fuera-de-proposito
+      description: "Reutilizar el score de cribado para decisiones fuera de la selección (despido, promoción, retribución) para las que el modelo no fue validado."
+      addressed_by: []   # SIN ATENDER: control de despliegue/gobernanza, no de este programa técnico
+
+# ── 2. Naturaleza de la tarea ────────────────────────────────────────────────
+task:
+  modality: tabular
+  type: classification
+
+# ── 3. Marco regulatorio ─────────────────────────────────────────────────────
+# Cribado de candidaturas en selección de personal — alto riesgo (EU AI Act Anexo III §4,
+# empleo) + RGPD Art.22 (decisiones automatizadas). Jurisdicción ES → además del AI Act y el
+# RGPD, aplica el Estatuto de los Trabajadores (Art.64.4.d, información al comité de empresa)
+# y la Ley 15/2022.
+context:
+  applicable_standards:
+    - eu/pren-18228@2026
+    - iso/23894@2023
+    - eu/ai-act@2024
+    - eu/pren-18283@2026
+    - eu/pren-18282@2026
+
+# ── 4. Datos y modelo ────────────────────────────────────────────────────────
+# Dataset REAL Campus Recruitment (CC0, n=215) cargado FIRST-CLASS vía Croissant (§2).
+# `artifacts.model` declara el descriptor del modelo (el motor materializa la fase de medición y
+# `venth run` mide los controles con su `risk_id` → habilita `venth reconstruct`).
+dataset: { croissant: data/campus.croissant.json }
+artifacts:
+  model: { kind: gradient-boosting, seed: 42 }
+
+# ── 5. Medición y reproducción ───────────────────────────────────────────────
+# Reproducer DVC REAL: la stage `evaluate` carga Campus Recruitment vía Croissant, entrena el
+# cribador (GradientBoosting), mide con el SDK venturalitica (vl.monitor/enforce) y emite
+# metrics.json + un ML-BOM CycloneDX. El arco rojo→verde de la FUGA lo gobierna `mitigate` en
+# params.yaml (false→true), versionado en git como tratamiento (ISO 23894 §6.5); bumpearlo marca
+# la stage stale → `venth run` re-mide en V2.
+#   - model-feature-leakage: mitigate=false → 1 (ROJO) ; mitigate=true → 0 (VERDE)  → CIERRA
+#   - data-sample-adequacy:  0.43 SIEMPRE (independiente del tratamiento)           → NO CIERRA (ROJO permanente)
+eval: { script: train.py }
+pipeline: { tool: dvc, metrics: metrics.json, params: params.yaml }
+oscal: { assessment_plan: shared_data/policies/assessment_plan.oscal.yaml }
+
+# ── 5b. Evaluación declarada por humano (F5) ─────────────────────────────────
+classification:
+  tier: high
+  basis:
+    - "EU AI Act Annex III §4 (empleo y gestión de personas — cribado de candidaturas)"
+    - "RGPD Art.22 (decisión individual automatizada con efectos jurídicos sobre el candidato)"
+    - "ES ET Art.64.4.d (información al comité de empresa)"
+    - "ES Ley 15/2022 (igualdad de trato y no discriminación)"
+  rationale: |
+    Cribado automatizado de candidaturas en selección de personal: alto riesgo
+    (EU AI Act Anexo III §4 empleo). Jurisdicción ES: además del AI Act y el RGPD,
+    aplican el Estatuto de los Trabajadores (Art.64.4.d) y la Ley 15/2022.
+
+# ── 6. Programa de riesgos (Art.9) ───────────────────────────────────────────
+# DOBLE HISTORIA HONESTA:
+#   · risk.inadequate-data (Art.10(5)) → gate ROJO PERMANENTE: la muestra no se cierra con
+#     ningún cambio de código; el único remedio es ADQUIRIR más datos (data_gap). El ciclo
+#     ISO 23894 queda ABIERTO porque su control bloqueante nunca pasa.
+#   · risk.feature-leakage (Art.10/15) → gate ROJO en V1 (variable fugada) que SÍ se CIERRA
+#     con el tratamiento (V2 la retira): el sub-tratamiento que demuestra el bucle RDD.
+risk:
+  appetite: { individual: MEDIUM, society: MEDIUM, organization: HIGH }
+  criteria: { scale: "5x5" }
+  overall_residual_criterion: HIGH   # prEN 18228 cl.10: criterio del residual GLOBAL (≠ apetito por-riesgo)
+  review_interval: P6M   # revisión semestral (ISO 23894 §6.6)
+  risks:
+    # ── RSK-1 — Datos insuficientes para certificar equidad (Art.10(5), NO CERRABLE) ─
+    # La muestra es estadísticamente insuficiente para evaluar la equidad de selección con
+    # fiabilidad. Su tratamiento NO es un cambio de código, sino un data_gap: adquirir más
+    # datos representativos. El control bloqueante nunca pasa → el ciclo ISO 23894 queda
+    # ABIERTO (historia honesta del ciclo abierto). Quien BLOQUEA es el GATE en ROJO.
+    - id: risk.inadequate-data
+      title: "Datos de cantidad insuficiente para certificar la equidad de selección (Art.10(5))"
+      domain: data
+      rationale: "La muestra es estadísticamente insuficiente para evaluar la equidad de selección por sexo con fiabilidad; sin datos suficientes no puede certificarse equidad ni cumplirse Art.10(5)."
+      impact: { individual: HIGH, society: HIGH }
+      likelihood: LIKELY   # LIKELY × HIGH = HIGH > apetito MEDIUM → requiere tratamiento
+      # SIN residual_likelihood declarado: no podemos certificar un residual con esta muestra;
+      # el remedio es adquirir más datos (data_gap), no reducir por control. El ciclo queda
+      # ABIERTO mientras el control bloqueante data-sample-adequacy no pase.
+      treat:
+        - method: REDUCE
+          action: "Adquirir datos de selección adicionales y representativos hasta alcanzar una cantidad suficiente (n >= 500) para evaluar la equidad por sexo con fiabilidad estadística. NO es un cambio de modelo: es un data_gap (adquisición de datos)."
+          controls: [eu/ai-act@2024#art-10]
+          measures:
+            # GATE BLOQUEANTE NO CERRABLE: n/500 >= 1.0. Con la muestra actual → 0.43 → ROJO siempre.
+            # Ningún tratamiento de modelo lo cierra: solo adquirir más datos.
+            - id: data-sample-adequacy
+              metric: sample_adequacy_ratio
+              constraint: ">= 1.0"
+              severity: high
+              enforcement: gate
+              lifecycle: [data_preparation]
+              article: "10"
+              standard_clauses:
+                - "eu/pren-18228@2026#8.1"
+                - "iso/23894@2023#6.4.2"
+
+    # ── RSK-2 — Fuga de la etiqueta en una variable colineal (Art.10/Art.15, CERRABLE) ──
+    # V1 incluye una variable colineal con la etiqueta → fuga total: el modelo aprende la
+    # etiqueta de forma trivial (exactitud inflada). El TRATAMIENTO = retirar esa variable
+    # (V2): el modelo aprende de variables legítimas y leakage=0. Es el sub-tratamiento que
+    # SÍ cierra el bucle ISO 23894 (cambio de código versionado en git).
+    - id: risk.feature-leakage
+      title: "Fuga de la etiqueta en una variable colineal del cribador"
+      domain: safety
+      rationale: "Una variable colineal con la etiqueta permite al modelo aprender atajos en lugar de méritos reales, produciendo predicciones infladas y discriminación proxy."
+      impact: { individual: HIGH, organization: HIGH }
+      likelihood: LIKELY   # LIKELY × HIGH = HIGH > apetito MEDIUM → requiere tratamiento
+      treat:
+        - method: REDUCE
+          action: "Retirar del entrenamiento la variable colineal con la etiqueta. El modelo debe aprender de variables legítimas (méritos académicos, experiencia)."
+          controls: [eu/ai-act@2024#art-10, eu/ai-act@2024#art-15]
+          residual_likelihood: UNLIKELY   # 6.5: UNLIKELY × HIGH = MEDIUM (dentro del apetito); el control lo CONFIRMA en V2
+          measures:
+            # GATE BLOQUEANTE CERRABLE: 1 si la variable fugada está presente (V1), 0 si no (V2).
+            # Restricción < 1: V1 (1.0) falla → V2 (0.0) pasa. Es el arco demostrativo rojo→verde.
+            - id: model-feature-leakage
+              metric: leaky_feature_flag
+              constraint: "< 1"
+              severity: high
+              enforcement: gate
+              lifecycle: [validation]
+              article: "10"
+              frameworks: [eu/ai-act@2024#art-15]
+              control_tier: protective
+              standard_clauses:
+                - "eu/pren-18228@2026#6.2.1"
+                - "eu/pren-18228@2026#6.3"
+                - "eu/pren-18228@2026#8.1"
+                - "iso/23894@2023#6.4.3"
+                - "iso/23894@2023#6.4.4"
+
+    # ── RSK-3 — Supervisión humana insuficiente (Art.14, HITL declarado) ──────────
+    # El cribador no debe sustituir al reclutador: una persona revisa y puede ANULAR la
+    # decisión antes de descartar a un candidato (RGPD Art.22 + AI Act Art.14). Medidas
+    # DECLARADAS (evaluation: manual, lifecycle: monitoring) → surgen en §7 como `declared`.
+    - id: risk.insufficient-human-oversight
+      title: "Supervisión humana insuficiente en la decisión de cribado"
+      domain: governance
+      rationale: "Sin un reclutador que revise y pueda anular el cribado, se vulnera RGPD Art.22 (decisión individual automatizada) y Art.14 AI Act (supervisión humana efectiva)."
+      impact: { individual: HIGH, organization: HIGH }
+      likelihood: POSSIBLE
+      treat:
+        - method: REDUCE
+          action: "Declarar el modo de supervisión (HITL: el reclutador revisa y puede anular el cribado) y el rol asignado con competencia y autoridad. RGPD Art.22: derecho a intervención humana en la decisión automatizada."
+          controls: [eu/ai-act@2024#art-14]
+          measures:
+            - id: oversight-mode
+              metric: oversight_mode_declared
+              constraint: "> 0"
+              severity: medium
+              enforcement: audit
+              evaluation: manual
+              lifecycle: [monitoring]
+              article: "14"
+              standard_clauses: ["eu/pren-18229-1@2026#human-oversight", "iso/8200@2024#control-transfer"]
+            - id: oversight-human-review
+              metric: oversight_human_review_declared
+              constraint: "> 0"
+              severity: medium
+              enforcement: audit
+              evaluation: manual
+              lifecycle: [monitoring]
+              article: "14"
+              standard_clauses: ["eu/pren-18229-1@2026#human-oversight", "iso/42105@2026#intervention"]
+
+    # ── RSK-4 — Transparencia insuficiente con el candidato (Art.13, DECLARADO) ─────
+    # El cribado es de alto riesgo y trata datos personales del candidato. Art.13 AI Act +
+    # RGPD Art.13/14/22 obligan a informar al candidato: existencia y finalidad del sistema,
+    # derecho a intervención humana y canal de ejercicio de derechos. Medidas DECLARADAS.
+    - id: risk.insufficient-transparency-information
+      title: "Transparencia insuficiente con el candidato sobre el cribado algorítmico (Art.13 AI Act + RGPD)"
+      domain: transparency
+      rationale: "El candidato debe ser informado de la existencia del sistema de IA, su finalidad y sus derechos (RGPD Art.13/14/22 + AI Act Art.13); sin esta información no puede ejercer sus derechos."
+      impact: { individual: HIGH, society: MEDIUM }
+      likelihood: POSSIBLE
+      treat:
+        - method: REDUCE
+          action: "Mantener un paquete informativo entregado al candidato: existencia y finalidad del sistema (cribado curricular), supervisión humana declarada (HITL) y canal de ejercicio de derechos (acceso, oposición, intervención humana). Medida DECLARADA: lifecycle organizativo, sin gate runtime."
+          controls: [eu/ai-act@2024#art-13]
+          residual_likelihood: UNLIKELY   # 6.5: UNLIKELY × HIGH = MEDIUM (declarativo; sin gate runtime)
+          measures:
+            - id: transparency-information-pack
+              metric: transparency_info_pack_declared
+              constraint: "> 0"
+              severity: medium
+              enforcement: audit
+              evaluation: manual
+              lifecycle: [monitoring]
+              article: "13"
+              standard_clauses: ["eu/pren-18229-1@2026#transparency", "iso/iec-12792@2024#information-content"]
+            - id: transparency-rights-channel
+              metric: transparency_rights_channel_declared
+              constraint: "> 0"
+              severity: medium
+              enforcement: audit
+              evaluation: manual
+              lifecycle: [monitoring]
+              article: "13"
+              standard_clauses: ["eu/pren-18229-1@2026#transparency", "iso/iec-12792@2024#user-information"]
+
+    # ── RSK-5 — Falta de información al comité de empresa (ET Art.64.4.d, DECLARADO) ──
+    # El empleador debe informar al comité de empresa de los parámetros, reglas e
+    # instrucciones del algoritmo de cribado (ET Art.64.4.d). La obligación residual es
+    # organizativa: entregar formalmente al comité tras cambios sustanciales. Medida DECLARADA.
+    - id: risk.algorithmic-info-works-council
+      title: "Falta de información al comité de empresa sobre el algoritmo de cribado (ET Art.64.4.d)"
+      domain: governance
+      rationale: "El empleador debe informar al comité de empresa de los parámetros y reglas del algoritmo (ET Art.64.4.d ES); sin este handoff la obligación legal residual queda incumplida."
+      impact: { individual: MEDIUM, society: MEDIUM }
+      likelihood: LIKELY
+      treat:
+        - method: REDUCE
+          action: "Mantener un documento informativo al comité de empresa con los parámetros, reglas e instrucciones del algoritmo. La obligación residual es organizativa: entregarlo formalmente al comité tras cambios sustanciales."
+          controls: [eu/ai-act@2024#art-14]
+          residual_likelihood: UNLIKELY   # 6.5: UNLIKELY × MEDIUM = LOW (declarativo; sin gate runtime)
+          measures:
+            - id: works-council-information-pack
+              metric: works_council_info_handoff
+              constraint: "== 1"
+              severity: medium
+              enforcement: audit
+              evaluation: manual
+              lifecycle: [monitoring]
+              article: "ext"
+              standard_clauses: ["iso/23894@2023#6.6"]
+  applicability: {}

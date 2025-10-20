@@ -1,0 +1,30 @@
+# Pipeline reproducible REAL de talent-screening (DVC). Una sola stage `evaluate`: carga Campus
+# Recruitment vía Croissant (mlcroissant), entrena el cribador (GradientBoosting), mide con el
+# SDK venturalitica (vl.monitor/enforce) y emite metrics.json + un ML-BOM CycloneDX promovido a
+# .venturalitica/bom.json. El motor lo reproduce vía el seam Reproducer (`dvc repro`) y ancla
+# `dvc.lock` en la evidencia firmada.
+#
+# El arco rojo→verde de la FUGA lo gobierna `mitigate` en params.yaml (false→true), versionado
+# en git como tratamiento (ISO 23894 §6.5); bumpearlo marca la stage stale → `venth run` re-mide
+# en V2. El gate bloqueante data-sample-adequacy (0.43) sigue ROJO en ambas versiones.
+stages:
+  evaluate:
+    cmd: .venv/bin/python evaluate.py
+    deps:
+      - evaluate.py
+      - compliance_eval.py
+      - train.py
+      - data/Placement_Data_Full_Class.csv
+      - data/campus.croissant.json
+      - shared_data/policies/assessment_plan.oscal.yaml
+    params:
+      - seed
+      - mitigate
+    outs:
+      - model.pkl:
+          cache: true
+      - .venturalitica/bom.json:
+          cache: false
+    metrics:
+      - metrics.json:
+          cache: false

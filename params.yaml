@@ -1,0 +1,14 @@
+# Hiperparámetros del pipeline reproducible (DVC-native). El motor los ancla en `dvc.lock`.
+# `seed` FIJO (determinismo del entrenamiento, Art.15). El arco rojo→verde de la FUGA lo
+# gobierna `mitigate`: demo-repos.ts lo bumpea false→true como TRATAMIENTO versionado en git
+# (retira la feature fugada `salary` — ISO 23894 §6.5). Bumpear `mitigate` marca la stage stale
+# → `venth run` re-mide en V2.
+#   mitigate=false (V1) → model-feature-leakage 1 (ROJO) + data-sample-adequacy 0.43 (ROJO)
+#   mitigate=true  (V2) → model-feature-leakage 0 (VERDE) + data-sample-adequacy 0.43 (ROJO PERMANENTE)
+# M-18: el estado en disco de la plantilla es el FINAL TRATADO (mitigate: true, V2 firmado) → un
+# clon directo regenera model-feature-leakage=0, igual que la evidencia firmada (AIA 11 / ISO 6.7).
+# El build re-deriva V1 (mitigate:false) SOLO transitoriamente en el primer run del arco para
+# reconstruir la historia rojo→verde en git. data-sample-adequacy 0.43 sigue ROJO en ambos →
+# gate bloqueante abierto → veredicto gap honesto.
+seed: 42
+mitigate: true

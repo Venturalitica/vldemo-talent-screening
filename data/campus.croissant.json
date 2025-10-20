@@ -1,0 +1,238 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "name": "campus-recruitment-eval",
+  "description": "Campus Recruitment (Factors affecting campus placement) — eval-set del demo talent-screening. n=215 candidaturas. Atributo protegido: gender. Etiqueta: status (Placed/Not Placed). La columna salary es NaN exactamente para Not Placed (fuga objetivo de la etiqueta).",
+  "citeAs": "Ben Roshan, Factors affecting campus placement, Kaggle (CC0: Public Domain).",
+  "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "url": "https://www.kaggle.com/datasets/benroshan/factors-affecting-campus-placement",
+  "datePublished": "2020-04-11",
+  "version": "1.0.0",
+  "rai:dataBiases": "n=215 (76 mujeres, 35%) es estadísticamente insuficiente para certificar equidad de selección por sexo (motiva el control bloqueante data-sample-adequacy).",
+  "rai:sensitiveData": "gender (atributo protegido para evaluación de sesgo).",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "Placement_Data_Full_Class.csv",
+      "name": "Placement_Data_Full_Class.csv",
+      "contentUrl": "Placement_Data_Full_Class.csv",
+      "encodingFormat": "text/csv",
+      "sha256": "f4f6ad9e13313a7edd12a71d88adfcec3e5153bf45469199c44e6d47c5de4bd3"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "candidates",
+      "name": "candidates",
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/sl_no",
+          "name": "sl_no",
+          "description": "Serial Number",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "sl_no" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/gender",
+          "name": "gender",
+          "description": "Gender — Male='M', Female='F' (atributo protegido).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "gender" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/ssc_p",
+          "name": "ssc_p",
+          "description": "Secondary Education percentage (10th Grade).",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "ssc_p" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/ssc_b",
+          "name": "ssc_b",
+          "description": "Board of Education (10th) — Central/Others.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "ssc_b" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/hsc_p",
+          "name": "hsc_p",
+          "description": "Higher Secondary Education percentage (12th Grade).",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "hsc_p" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/hsc_b",
+          "name": "hsc_b",
+          "description": "Board of Education (12th) — Central/Others.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "hsc_b" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/hsc_s",
+          "name": "hsc_s",
+          "description": "Specialization in Higher Secondary Education.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "hsc_s" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/degree_p",
+          "name": "degree_p",
+          "description": "Degree Percentage.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "degree_p" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/degree_t",
+          "name": "degree_t",
+          "description": "Field of degree education.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "degree_t" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/workex",
+          "name": "workex",
+          "description": "Work Experience (Yes/No).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "workex" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/etest_p",
+          "name": "etest_p",
+          "description": "Employability test percentage (conducted by college).",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "etest_p" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/specialisation",
+          "name": "specialisation",
+          "description": "Post Graduation (MBA) specialization.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "specialisation" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/mba_p",
+          "name": "mba_p",
+          "description": "MBA percentage.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "mba_p" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/status",
+          "name": "status",
+          "description": "Status of placement — Placed / Not Placed (etiqueta).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "status" }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "candidates/salary",
+          "name": "salary",
+          "description": "Salary offered to placed candidates. NaN exactamente para Not Placed (fuga objetivo de la etiqueta — el tratamiento V2 la retira).",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": { "@id": "Placement_Data_Full_Class.csv" },
+            "extract": { "column": "salary" }
+          }
+        }
+      ]
+    }
+  ]
+}

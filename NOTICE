@@ -1,0 +1,18 @@
+This directory bundles the Campus Recruitment (Factors affecting campus placement) dataset.
+
+Source:  https://www.kaggle.com/datasets/benroshan/factors-affecting-campus-placement
+License: CC0: Public Domain (https://creativecommons.org/publicdomain/zero/1.0/)
+Cite:    Ben Roshan, Factors affecting campus placement, Kaggle (CC0: Public Domain).
+
+Redistributed for the venth `talent-screening` demo example. n=215 candidaturas; the
+column `status` (Placed/Not Placed) is the label and `gender` (M/F) the protected
+attribute for the fairness evaluation; see data/campus.croissant.json for the
+field-level provenance. The column `salary` is NaN exactly for Not Placed candidates
+(target leakage); the mitigation treatment (`mitigate: true`) drops it.
+
+DISCLOSURE (M-18): the public reproducer ships in its FINAL TREATED state (mitigate: true —
+the leaky `salary` feature removed), which matches the signed V2 conformance evidence
+(model-feature-leakage = 0), so the signed verdict is regenerable from the public artefact.
+The repository's git history additionally reconstructs the prior V1 (untreated, leaky) state
+to document the ISO 23894 §6.5 red→green treatment. The blocking data-sample-adequacy gate
+(n=215/500 = 0.43) stays RED in BOTH states, hence the honest GAP verdict.
