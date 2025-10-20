@@ -11,4 +11,4 @@
 # reconstruir la historia rojo→verde en git. data-sample-adequacy 0.43 sigue ROJO en ambos →
 # gate bloqueante abierto → veredicto gap honesto.
 seed: 42
-mitigate: false
+mitigate: true
